@@ -8,51 +8,28 @@ namespace CinemaHall
 {
     public class Node
     {
-        //Лист других нод
         public List<Node> _nexts = new List<Node>();
         
-        //Сколько пустого места осталось
         public int Length {get; set;}
 
-        //Делают проект тяжелее //Список сеансов
-        public List<Film> _cinemaSessions;
+        public List<Film> CinemaSessions { get; set; }
 
-        
-        public void Create(List<Film> films, List<Film> sessions = null)
+        public void Create(List<Film> films, List<Film> filmSessions = null)
         {
-            // Сохраняем предыдущие сеансы, которые нам передались
-            _cinemaSessions = sessions;
+            CinemaSessions = filmSessions;
+            Film film = new Film();
 
             foreach (Film i in films)
             {
-                if (Length >= i.duration)
+                if (Length >= i.Duration)
                 {
-                    Node node = new Node() { Length = Length - i.duration };
-                    // Кладем в список созданную ноду - благодаря этому будет ссылка на нижнюю ноду
+                    Node node = new Node() { Length = Length - i.Duration };                    
                     _nexts.Add(node);
-                    // Копируем предыдущие сеансы
-                    List<Film> newSessions = Copy(sessions);
-                    // Добавляем в сеанс текущий фильм
+                    List<Film> newSessions = film.Copy(filmSessions);
                     newSessions.Add(i);
-                    // Рекурсия
                     node.Create(films, newSessions);
                 }
             }
-        } 
-
-        //Копирование списка
-        public List<Film> Copy(List<Film> sessions)
-        {
-            List<Film> newSessions = new List<Film>();
-            if (sessions != null)
-            {
-                foreach (var i in sessions)
-                {
-                    newSessions.Add(i);
-                }
-            }
-            return newSessions;
-        }
-          
+        }          
     }
 }

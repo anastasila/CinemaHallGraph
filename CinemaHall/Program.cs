@@ -12,9 +12,11 @@ namespace CinemaHall
             int hallNumber = 5;
 
             List<Film> films = new List<Film>();
-            films.Add(new Film(1, "Человек паук", 60));
-            films.Add(new Film(2, "Властелин колец", 90));
-            films.Add(new Film(3, "Титаник", 550));
+
+            films.Add(new Film("Человек паук", 60));
+            films.Add(new Film("Властелин колец", 90));
+            films.Add(new Film("Титаник", 550));
+            films.Add(new Film("Война и мир", 500));
 
             //Console.WriteLine("Введите количество залов в кинотеатре:");
             //int hallNumber = Convert.ToInt32(Console.ReadLine());
@@ -39,12 +41,13 @@ namespace CinemaHall
 
             Cinema cinema = new Cinema(hallNumber, cinemaWorkTime, films);
 
-            Node rute = new Node() { Length = cinemaWorkTime };
+            Console.WriteLine("Расписание сеансов с оптимальным временем:");
+            cinema.ShowRelevantSessionsWithOptimalTime();
+            Console.WriteLine();
 
-            rute.Create(films);
-            cinema.FindAllPossibleSessions(rute);
-            cinema.ShowRelevantSessions();          
-
+            Console.WriteLine("Расписание сеансов с оптимальным временем и показом всех фильмов:");
+            cinema.ShowRelevantSessionsWithAllFilms();
+            
         }
     }
 }

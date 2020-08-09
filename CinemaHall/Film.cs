@@ -6,22 +6,32 @@ namespace CinemaHall
 {
     public class Film
     {
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public int duration { get; set; }
-
-        public int index { get; set; }
+        public int Duration { get; set; }
 
         public Film()
         {
 
         }
 
-        public Film(int index, string name, int duration)
+        public Film(string name, int duration)
         {
-            this.index = index;
-            this.name = name;
-            this.duration = duration;
+            this.Name = name;
+            this.Duration = duration;
+        }
+
+        public List<Film> Copy(List<Film> filmSessions)
+        {
+            List<Film> newSessions = new List<Film>();
+            if (filmSessions != null)
+            {
+                foreach (var i in filmSessions)
+                {
+                    newSessions.Add(i);
+                }
+            }
+            return newSessions;
         }
     }
 }
