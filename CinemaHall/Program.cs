@@ -13,10 +13,19 @@ namespace CinemaHall
 
             List<Film> films = new List<Film>();
 
-            films.Add(new Film("Человек паук", 60));
-            films.Add(new Film("Властелин колец", 90));
-            films.Add(new Film("Титаник", 550));
-            films.Add(new Film("Война и мир", 500));
+            films.Add(new Film(1, "Человек паук", 60));
+            films.Add(new Film(2, "Властелин колец", 30));
+            films.Add(new Film(3, "Титаник", 590));
+            films.Add(new Film(4, "Война и мир", 90));
+            films.Add(new Film(5, "Война и мир 2", 300));
+            films.Add(new Film(6, "Война и мир 3", 575));
+
+            //films.Add(new Film(1, "Человек паук", 550));
+            //films.Add(new Film(2, "Властелин колец", 580));
+            //films.Add(new Film(3, "Титаник", 590));
+            //films.Add(new Film(4, "Война и мир", 300));
+            //films.Add(new Film(5, "Война и мир 2", 300));
+            //films.Add(new Film(6, "Война и мир 3", 575));
 
             //Console.WriteLine("Введите количество залов в кинотеатре:");
             //int hallNumber = Convert.ToInt32(Console.ReadLine());
@@ -25,13 +34,13 @@ namespace CinemaHall
             //int filmNumber = Convert.ToInt32(Console.ReadLine());
 
             //List<Film> films = new List<Film>();
-            //int count = 0;
+            //int count = 1;
             //while (count < filmNumber)
             //{
-            //    Console.WriteLine($"Введите название фильма {count + 1}:");
+            //    Console.WriteLine($"Введите название фильма {count}:");
             //    string filmName = Convert.ToString(Console.ReadLine());
 
-            //    Console.WriteLine($"Введите продолжительность фильма в минутах {count + 1}:");
+            //    Console.WriteLine($"Введите продолжительность фильма в минутах:");
             //    int filmDuration = Convert.ToInt32(Console.ReadLine());
 
             //    films.Add(new Film(count, filmName, filmDuration));
@@ -40,6 +49,9 @@ namespace CinemaHall
             //}
 
             Cinema cinema = new Cinema(hallNumber, cinemaWorkTime, films);
+
+            //cinema.ShowAllPossibleSessions();
+            //Console.WriteLine();
 
             Console.WriteLine("Расписание сеансов с оптимальным временем:");
             cinema.ShowRelevantSessionsWithOptimalTime();

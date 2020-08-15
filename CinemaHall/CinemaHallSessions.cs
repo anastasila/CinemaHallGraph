@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CinemaHall
@@ -9,6 +10,7 @@ namespace CinemaHall
     {
         public List<Film> sessions;
         public int remainingTime { get; set; }
+        public int differentFilms { get; set; }
 
         public CinemaHallSessions()
         {
@@ -19,6 +21,19 @@ namespace CinemaHall
         {
             this.remainingTime = remainingTime;
             this.sessions = sessions;
+            this.differentFilms = countDifferentFilms(sessions);
+        }
+
+        private int countDifferentFilms(List<Film> filmList)
+        {
+            IEnumerable<Film> differentFilms = filmList.Distinct();
+
+            int count = 0;
+            foreach (var film in differentFilms)
+            {
+                count++;
+            }
+            return count;
         }
 
         public void PrintAllSessionsInThisHall()
@@ -37,6 +52,21 @@ namespace CinemaHall
             if (compareCinemaHall == null)
                 return 1;
 
+            if (this.remainingTime == compareCinemaHall.remainingTime)
+            {
+                if(this.differentFilms == compareCinemaHall.differentFilms)
+                {
+                    return 0;
+                }
+                else if(this.differentFilms > compareCinemaHall.differentFilms)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
             else
                 return this.remainingTime.CompareTo(compareCinemaHall.remainingTime);
         }

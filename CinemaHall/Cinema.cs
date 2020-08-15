@@ -108,6 +108,8 @@ namespace CinemaHall
         {
             Film film = new Film();
             List<Film> filmListCopy = film.Copy(_films);
+            List<CinemaHallSessions> allSessionsCopy = Copy(allSessions);
+            int removedSessions = 0;
 
             int i = 0;
             while (i < allSessions.Count && _relevantSessions.Count < _hallNumber)
@@ -127,13 +129,15 @@ namespace CinemaHall
                     if (match)
                     {
                         _relevantSessions.Add(allSessions[i]);
-                        allSessions.Remove(allSessions[i]);
+                        allSessionsCopy.Remove(allSessionsCopy[i - removedSessions]);
+                        removedSessions++;
                     }
                 }
                 else
                 {
                     _relevantSessions.Add(allSessions[i]);
-                    allSessions.Remove(allSessions[i]);
+                    allSessionsCopy.Remove(allSessionsCopy[i - removedSessions]);
+                    removedSessions++;
                 }
 
                 i++;
@@ -141,7 +145,7 @@ namespace CinemaHall
 
             if (_relevantSessions.Count < _hallNumber)
             {
-                FindRelevantSessionsWithAllFilms(allSessions);
+                FindRelevantSessionsWithAllFilms(allSessionsCopy);
             }
 
         }
