@@ -18,9 +18,9 @@ namespace CinemaHallTests
         }
 
         [Test, TestCaseSource(typeof(CreateNodeDataSource))]
-        public void CreateAndSortAllSessionsTest(Cinema cinema, List<CinemaHallSessions> expected)
+        public void GetAllPossibleSessionsTest(Cinema cinema, List<CinemaHallSessions> expected)
         {
-            List<CinemaHallSessions> actual = cinema.CreateAndSortAllSessions();
+            List<CinemaHallSessions> actual = cinema.GetAllPossibleSessions();
             CollectionAssert.AreEqual(expected, actual);
         }
 

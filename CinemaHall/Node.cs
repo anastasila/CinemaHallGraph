@@ -8,7 +8,7 @@ namespace CinemaHall
 {
     public class Node
     {
-        public List<Node> _nexts = new List<Node>();
+        public List<Node> Nexts = new List<Node>();
         
         public int Length {get; set;}
 
@@ -24,7 +24,7 @@ namespace CinemaHall
                 if (Length >= i.Duration)
                 {
                     Node node = new Node() { Length = Length - i.Duration };                    
-                    _nexts.Add(node);
+                    Nexts.Add(node);
                     List<Film> newSessions = film.Copy(filmSessions);
                     newSessions.Add(i);
                     node.Create(films, newSessions);

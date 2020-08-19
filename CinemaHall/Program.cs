@@ -13,19 +13,19 @@ namespace CinemaHall
 
             List<Film> films = new List<Film>();
 
-            //films.Add(new Film(1, "Человек паук", 60));
-            //films.Add(new Film(2, "Властелин колец", 30));
-            //films.Add(new Film(3, "Титаник", 590));
-            //films.Add(new Film(4, "Война и мир", 90));
-            //films.Add(new Film(5, "Война и мир 2", 300));
-            //films.Add(new Film(6, "Война и мир 3", 575));
-
-            films.Add(new Film(1, "Человек паук", 550));
-            films.Add(new Film(2, "Властелин колец", 580));
+            films.Add(new Film(1, "Человек паук", 60));
+            films.Add(new Film(2, "Властелин колец", 30));
             films.Add(new Film(3, "Титаник", 590));
-            films.Add(new Film(4, "Война и мир", 300));
+            films.Add(new Film(4, "Война и мир", 90));
             films.Add(new Film(5, "Война и мир 2", 300));
             films.Add(new Film(6, "Война и мир 3", 575));
+
+            //films.Add(new Film(1, "Человек паук", 550));
+            //films.Add(new Film(2, "Властелин колец", 580));
+            //films.Add(new Film(3, "Титаник", 590));
+            //films.Add(new Film(4, "Война и мир", 300));
+            //films.Add(new Film(5, "Война и мир 2", 300));
+            //films.Add(new Film(6, "Война и мир 3", 575));
 
             //Console.WriteLine("Введите количество залов в кинотеатре:");
             //int hallNumber = Convert.ToInt32(Console.ReadLine());
@@ -49,17 +49,15 @@ namespace CinemaHall
             //}
 
             Cinema cinema = new Cinema(hallNumber, cinemaWorkTime, films);
+            Schedule schedule = new Schedule();
 
-            cinema.ShowAllPossibleSessions();
+            Console.WriteLine("Расписание сеансов с оптимальным временем:");
+            schedule.ShowSessions(cinema.GetRelevantSessionsWithOptimalTime());
             Console.WriteLine();
 
-            //Console.WriteLine("Расписание сеансов с оптимальным временем:");
-            //cinema.ShowRelevantSessionsWithOptimalTime();
-            //Console.WriteLine();
+            Console.WriteLine("Расписание сеансов с оптимальным временем и показом всех фильмов:");
+            schedule.ShowSessions(cinema.GetRelevantSessionsWithAllFilms(cinema.AllPossibleSessions));
 
-            //Console.WriteLine("Расписание сеансов с оптимальным временем и показом всех фильмов:");
-            //cinema.ShowRelevantSessionsWithAllFilms();
-            
         }
     }
 }
