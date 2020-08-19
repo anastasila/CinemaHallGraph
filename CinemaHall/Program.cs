@@ -7,18 +7,18 @@ namespace CinemaHall
     {
         static void Main(string[] args)
         {
-            int cinemaWorkTime = 600;
+            int cinemaWorkTime = 500;
 
-            int hallNumber = 5;
+            int hallNumber = 10;
 
             List<Film> films = new List<Film>();
 
-            films.Add(new Film(1, "Человек паук", 60));
-            films.Add(new Film(2, "Властелин колец", 30));
-            films.Add(new Film(3, "Титаник", 590));
-            films.Add(new Film(4, "Война и мир", 90));
-            films.Add(new Film(5, "Война и мир 2", 300));
-            films.Add(new Film(6, "Война и мир 3", 575));
+            //films.Add(new Film(1, "Человек паук", 60));
+            //films.Add(new Film(2, "Властелин колец", 30));
+            //films.Add(new Film(3, "Титаник", 590));
+            //films.Add(new Film(4, "Война и мир", 90));
+            //films.Add(new Film(5, "Война и мир 2", 300));
+            //films.Add(new Film(6, "Война и мир 3", 575));
 
             //films.Add(new Film(1, "Человек паук", 550));
             //films.Add(new Film(2, "Властелин колец", 580));
@@ -52,11 +52,11 @@ namespace CinemaHall
             Schedule schedule = new Schedule();
 
             Console.WriteLine("Расписание сеансов с оптимальным временем:");
-            schedule.ShowSessions(cinema.GetRelevantSessionsWithOptimalTime());
+            schedule.ShowSessions(cinema.RelevantSessionsWithOptimalTime);
             Console.WriteLine();
 
             Console.WriteLine("Расписание сеансов с оптимальным временем и показом всех фильмов:");
-            schedule.ShowSessions(cinema.GetRelevantSessionsWithAllFilms(cinema.AllPossibleSessions));
+            schedule.ShowSessions(cinema.RelevantSessionsWithAllFilms);
 
         }
     }
