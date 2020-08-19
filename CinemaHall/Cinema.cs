@@ -22,15 +22,14 @@ namespace CinemaHall
         {
             _hallNumber = hallNumber;
             _workTime = workTime;
-            _films = films;
-            _allPossibleSessions = new List<CinemaHallSessions>();
-            CreateNode();
+            _films = films;            
+            CreateAndSortAllSessions();
         }
 
         public void ShowRelevantSessionsWithOptimalTime()
         {
             _relevantSessions = new List<CinemaHallSessions>();
-            FindRelevantSessionsWithOptimalTime();
+            GetRelevantSessionsWithOptimalTime();
 
             int count = 0;
             foreach (var i in _relevantSessions)
@@ -44,7 +43,7 @@ namespace CinemaHall
         {
             _relevantSessions = new List<CinemaHallSessions>();
             List<CinemaHallSessions> copyAllSessions = Copy(_allPossibleSessions);
-            FindRelevantSessionsWithAllFilms(copyAllSessions);
+            GetRelevantSessionsWithAllFilms(copyAllSessions);
 
             int count = 0;
             foreach (var i in _relevantSessions)
@@ -66,11 +65,12 @@ namespace CinemaHall
             Console.WriteLine();
         }
 
-        private void CreateNode()
+        public List<CinemaHallSessions> CreateAndSortAllSessions()
         {
+            _allPossibleSessions = new List<CinemaHallSessions>();
             Node node = new Node() { Length = _workTime };
             node.Create(_films);
-            FindAllPossibleSessions(node);
+            GetAllPossibleSessions(node);
 
             if (_allPossibleSessions.Count < _hallNumber)
             {
@@ -78,15 +78,16 @@ namespace CinemaHall
             }
 
             _allPossibleSessions.Sort();
+            return _allPossibleSessions;
         }        
         
-        private void FindAllPossibleSessions(Node node)
+        private void GetAllPossibleSessions(Node node)
         {
             if (node._nexts.Count != 0)
             {
                 foreach (Node n in node._nexts)
                 {
-                    FindAllPossibleSessions(n);
+                    GetAllPossibleSessions(n);
                 }
             }
             else
@@ -96,15 +97,17 @@ namespace CinemaHall
             }
         }
 
-        private void FindRelevantSessionsWithOptimalTime()
+        public List<CinemaHallSessions> GetRelevantSessionsWithOptimalTime()
         {
             for (int i = 0; i < _hallNumber; i++)
             {
                 _relevantSessions.Add(_allPossibleSessions[i]);
             }
+
+            return _relevantSessions;
         }
 
-        private void FindRelevantSessionsWithAllFilms(List<CinemaHallSessions> allSessions)
+        public List<CinemaHallSessions> GetRelevantSessionsWithAllFilms(List<CinemaHallSessions> allSessions)
         {
             Film film = new Film();
             List<Film> filmListCopy = film.Copy(_films);
@@ -145,9 +148,10 @@ namespace CinemaHall
 
             if (_relevantSessions.Count < _hallNumber)
             {
-                FindRelevantSessionsWithAllFilms(allSessionsCopy);
+                GetRelevantSessionsWithAllFilms(allSessionsCopy);
             }
 
+            return _relevantSessions;
         }
 
         private void PrintSession(CinemaHallSessions hall, int count)
