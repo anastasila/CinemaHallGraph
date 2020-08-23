@@ -6,7 +6,7 @@ using System.Text;
 namespace CinemaHall
 {
     //Зал кинотеатра со всеми сеансами
-    public class CinemaHallSessions: IComparable<CinemaHallSessions>
+    public class CinemaHallSessions : IComparable<CinemaHallSessions>
     {
         public List<Film> sessions;
         public int remainingTime { get; set; }
@@ -21,29 +21,18 @@ namespace CinemaHall
         {
             this.remainingTime = remainingTime;
             this.sessions = sessions;
-            this.differentFilms = countDifferentFilms(sessions);
-        }
-
-        private int countDifferentFilms(List<Film> filmList)
-        {
-            IEnumerable<Film> differentFilms = filmList.Distinct();
-
-            int count = 0;
-            foreach (var film in differentFilms)
-            {
-                count++;
-            }
-            return count;
+            IEnumerable<Film> differentFilms = sessions.Distinct(new FilmComparer());
+            this.differentFilms = differentFilms.Count();
         }
 
         public void PrintAllSessionsInThisHall()
         {
-           DateTime timeStart = new DateTime(2020, 1, 1, 14, 00, 00);
+            DateTime timeStart = new DateTime(2020, 1, 1, 14, 00, 00);
             foreach (var i in sessions)
             {
                 DateTime timeEnd = timeStart.AddMinutes(i.Duration);
                 Console.WriteLine($"{timeStart.ToShortTimeString()} - {timeEnd.ToShortTimeString()} \t {i.Name}");
-                timeStart = timeEnd;              
+                timeStart = timeEnd;
             }
         }
 
@@ -54,11 +43,11 @@ namespace CinemaHall
 
             if (this.remainingTime == compareCinemaHall.remainingTime)
             {
-                if(this.differentFilms == compareCinemaHall.differentFilms)
+                if (this.differentFilms == compareCinemaHall.differentFilms)
                 {
                     return 0;
                 }
-                else if(this.differentFilms > compareCinemaHall.differentFilms)
+                else if (this.differentFilms > compareCinemaHall.differentFilms)
                 {
                     return -1;
                 }
@@ -69,6 +58,17 @@ namespace CinemaHall
             }
             else
                 return this.remainingTime.CompareTo(compareCinemaHall.remainingTime);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj.GetType() != this.GetType()) return false;
+
+            CinemaHallSessions compare = (CinemaHallSessions)obj;           
+
+            return (sessions.SequenceEqual(compare.sessions)
+                && this.remainingTime == compare.remainingTime
+                && this.differentFilms == compare.differentFilms);
         }
     }
 }

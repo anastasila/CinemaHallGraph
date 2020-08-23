@@ -6,87 +6,157 @@ namespace CinemaHall
 {
     public class Cinema
     {
+        private int _hallNumber;
+
+        private int _workTime;
+
+        private List<Film> _films;
+
+        private List<CinemaHallSessions> _allPossibleSessions;
+
+        private List<CinemaHallSessions> _relevantSessionsWithOptimalTime;
+
+        private List<CinemaHallSessions> _relevantSessionsWithAllFilms;
+
+        public int HallNumber 
+        {
+            get 
+            { 
+                return _hallNumber; 
+            } 
+            set 
+            {
+                if(value <= 0)
+                {
+                    IncorrectValueException();
+                }
+                else
+                {
+                    _hallNumber = value;
+                    ChangeCinemaParameters();
+                }                
+            } 
+        }
+        public int WorkTime 
+        { 
+            get 
+            { 
+                return _workTime; 
+            } 
+            set 
+            {
+                if (value <= 0)
+                {
+                    IncorrectValueException();
+                }
+                else
+                {
+                    _workTime = value;
+                    ChangeCinemaParameters();
+                }                
+            } 
+        }
+        public List<Film> Films 
+        { 
+            get 
+            { 
+                return _films; 
+            } 
+            set 
+            {
+                if (value.Count == 0)
+                {
+                    IncorrectValueException();
+                }
+                else
+                {
+                    _films = value;
+                    ChangeCinemaParameters();
+                }                
+            } 
+        }
+        public List<CinemaHallSessions> AllPossibleSessions 
+        { 
+            get 
+            { 
+                if(_allPossibleSessions == null)
+                {
+                    GetAllPossibleSessions();
+                }
+                return _allPossibleSessions; 
+            } 
+        }
+        public List<CinemaHallSessions> RelevantSessionsWithOptimalTime 
+        { 
+            get 
+            {
+                if(_relevantSessionsWithOptimalTime == null)
+                {
+                    GetRelevantSessionsWithOptimalTime();
+                }
+                return _relevantSessionsWithOptimalTime; 
+            } 
+        }
+        public List<CinemaHallSessions> RelevantSessionsWithAllFilms
+        { 
+            get 
+            {
+                if (_relevantSessionsWithAllFilms == null)
+                {
+                    GetRelevantSessionsWithAllFilms(AllPossibleSessions);
+                }
+                return _relevantSessionsWithAllFilms; 
+            } 
+        }                
+
         public Cinema() { }
-
-        private int _hallNumber { get; set; }
-
-        private int _workTime { get; set; }
-
-        private List<Film> _films { get; set; }
-
-        private List<CinemaHallSessions> _allPossibleSessions { get; set; }
-
-        private List<CinemaHallSessions> _relevantSessions { get; set; }
 
         public Cinema(int hallNumber, int workTime, List<Film> films)
         {
-            _hallNumber = hallNumber;
-            _workTime = workTime;
-            _films = films;
+            HallNumber = hallNumber;
+            WorkTime = workTime;
+            Films = films;
+            _allPossibleSessions = GetAllPossibleSessions();
+        }
+
+        private void ChangeCinemaParameters()
+        {
+            _allPossibleSessions = null;
+            _relevantSessionsWithOptimalTime = null;
+            _relevantSessionsWithAllFilms = null;
+        }
+
+        private List<CinemaHallSessions> GetAllPossibleSessions()
+        {            
             _allPossibleSessions = new List<CinemaHallSessions>();
-            CreateNode();
-        }
-
-        public void ShowRelevantSessionsWithOptimalTime()
-        {
-            _relevantSessions = new List<CinemaHallSessions>();
-            FindRelevantSessionsWithOptimalTime();
-
-            int count = 0;
-            foreach (var i in _relevantSessions)
-            {
-                PrintSession(i, count);
-                count++;
-            }
-        }
-
-        public void ShowRelevantSessionsWithAllFilms()
-        {
-            _relevantSessions = new List<CinemaHallSessions>();
-            List<CinemaHallSessions> copyAllSessions = Copy(_allPossibleSessions);
-            FindRelevantSessionsWithAllFilms(copyAllSessions);
-
-            int count = 0;
-            foreach (var i in _relevantSessions)
-            {
-                PrintSession(i, count);
-                count++;
-            }
-        }
-
-        public void ShowAllPossibleSessions()
-        {
-            int count = 0;
-            foreach (var i in _allPossibleSessions)
-            {
-                PrintSession(i, count);
-                count++;
-            }
-
-            Console.WriteLine();
-        }
-
-        private void CreateNode()
-        {
             Node node = new Node() { Length = _workTime };
             node.Create(_films);
-            FindAllPossibleSessions(node);
+            
+            if(node.Nexts.Count != 0)
+            {
+                CreateAllSessions(node);
+            }
+            else
+            {
+                NodeException();
+            }
 
             if (_allPossibleSessions.Count < _hallNumber)
             {
-                Exception();
+                CinemaHallException();
             }
 
             _allPossibleSessions.Sort();
-        }        
-        
-        private void FindAllPossibleSessions(Node node)
+            return _allPossibleSessions;
+        }
+
+        private void CreateAllSessions(Node node)
         {
-            if (node._nexts.Count != 0)
+            if (node.Nexts.Count != 0)
             {
-                foreach (Node n in node._nexts)
+                foreach (Node n in node.Nexts)
                 {
-                    FindAllPossibleSessions(n);
+                    CreateAllSessions(n);
                 }
             }
             else
@@ -96,65 +166,67 @@ namespace CinemaHall
             }
         }
 
-        private void FindRelevantSessionsWithOptimalTime()
+        private void GetRelevantSessionsWithOptimalTime()
         {
+            _relevantSessionsWithOptimalTime = new List<CinemaHallSessions>();
+
             for (int i = 0; i < _hallNumber; i++)
             {
-                _relevantSessions.Add(_allPossibleSessions[i]);
+                _relevantSessionsWithOptimalTime.Add(AllPossibleSessions[i]);
             }
         }
 
-        private void FindRelevantSessionsWithAllFilms(List<CinemaHallSessions> allSessions)
+        private List<CinemaHallSessions> GetRelevantSessionsWithAllFilms(List<CinemaHallSessions> allSessions)
         {
             Film film = new Film();
             List<Film> filmListCopy = film.Copy(_films);
             List<CinemaHallSessions> allSessionsCopy = Copy(allSessions);
-            int removedSessions = 0;
 
-            int i = 0;
-            while (i < allSessions.Count && _relevantSessions.Count < _hallNumber)
+            if (_relevantSessionsWithAllFilms == null)
             {
-                bool match = false;
-                if (filmListCopy.Count != 0)
+                _relevantSessionsWithAllFilms = new List<CinemaHallSessions>();
+            }
+                        
+            foreach (var cinemaHall in allSessions)
+            {
+                if(_relevantSessionsWithAllFilms.Count < _hallNumber)
                 {
-                    foreach (var j in allSessions[i].sessions)
+                    bool match = false;
+                    if (filmListCopy.Count != 0)
                     {
-                        if (filmListCopy.Contains(j))
+                        foreach (var currentFilm in cinemaHall.sessions)
                         {
-                            filmListCopy.Remove(j);
-                            match = true;
+                            if (filmListCopy.Contains(currentFilm))
+                            {
+                                filmListCopy.Remove(currentFilm);
+                                match = true;
+                            }
+                        }
+
+                        if (match)
+                        {
+                            _relevantSessionsWithAllFilms.Add(cinemaHall);
+                            allSessionsCopy.Remove(cinemaHall);
                         }
                     }
-
-                    if (match)
+                    else
                     {
-                        _relevantSessions.Add(allSessions[i]);
-                        allSessionsCopy.Remove(allSessionsCopy[i - removedSessions]);
-                        removedSessions++;
+                        _relevantSessionsWithAllFilms.Add(cinemaHall);
+                        allSessionsCopy.Remove(cinemaHall);
                     }
                 }
                 else
                 {
-                    _relevantSessions.Add(allSessions[i]);
-                    allSessionsCopy.Remove(allSessionsCopy[i - removedSessions]);
-                    removedSessions++;
-                }
-
-                i++;
+                    return _relevantSessionsWithAllFilms;
+                }                
             }
 
-            if (_relevantSessions.Count < _hallNumber)
+            if (_relevantSessionsWithAllFilms.Count < _hallNumber)
             {
-                FindRelevantSessionsWithAllFilms(allSessionsCopy);
+                GetRelevantSessionsWithAllFilms(allSessionsCopy);
             }
 
-        }
-
-        private void PrintSession(CinemaHallSessions hall, int count)
-        {
-            Console.WriteLine();
-            Console.WriteLine($"Зал {count + 1}, свободное время: {hall.remainingTime}");
-            hall.PrintAllSessionsInThisHall();
+            return _relevantSessionsWithAllFilms;
         }
 
         private List<CinemaHallSessions> Copy(List<CinemaHallSessions> cinemaHallSessions)
@@ -170,11 +242,23 @@ namespace CinemaHall
             return newSessions;
         }
 
-        private void Exception()
+        public ArgumentOutOfRangeException CinemaHallException()
         {
-            throw new Exception
+            throw new ArgumentOutOfRangeException
                     ($"Количество уникальных расписаний для этого списка фильмов ({_allPossibleSessions.Count}) меньше, чем количество залов ({_hallNumber}). " +
                     $"Увеличьте количество фильмов или уменьшите количество залов.");
+        }
+
+        public Exception IncorrectValueException()
+        {
+            throw new Exception
+                    ($"Значение должно быть больше нуля");
+        }
+
+        public ArgumentOutOfRangeException NodeException()
+        {
+            throw new ArgumentOutOfRangeException
+                    ($"При заданных параметрах невозможно создать ни один сеанс. Измените продолжительность работы кинотеатра или продолжительность фильмов.");
         }
     }
 }

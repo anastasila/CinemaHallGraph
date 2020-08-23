@@ -42,9 +42,27 @@ namespace CinemaHall
         {
             if (Object.ReferenceEquals(other, null)) return false;
 
-            if (Object.ReferenceEquals(this, other)) return true;
+            return Number.Equals(other.Number) && Name.Equals(other.Name) && Duration.Equals(other.Duration);
+        }
+    }
 
-            return Number.Equals(other.Number) && Name.Equals(other.Name);
+    class FilmComparer : IEqualityComparer<Film>
+    {
+        public bool Equals([AllowNull] Film x, [AllowNull] Film y)
+        {
+            if (Object.ReferenceEquals(x, null)) return false;
+            if (Object.ReferenceEquals(y, null)) return false;
+
+            return x.Number.Equals(y.Number) && x.Name.Equals(y.Name) && x.Duration.Equals(y.Duration);
+        }
+
+        public int GetHashCode([DisallowNull] Film obj)
+        {            
+            int hashFilmName = obj.Name == null ? 0 : obj.Name.GetHashCode();
+            int hashFilmNumber = obj.Number.GetHashCode();
+            int hashFilmDuration = obj.Duration.GetHashCode();
+
+            return hashFilmName ^ hashFilmNumber ^ hashFilmDuration;
         }
     }
 }
