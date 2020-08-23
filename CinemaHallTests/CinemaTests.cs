@@ -1,4 +1,5 @@
 ﻿using CinemaHall;
+using CinemaHallTests.DataSource;
 using CinemaHallTests.Mocks;
 using NUnit.Framework;
 using System;
@@ -20,9 +21,23 @@ namespace CinemaHallTests
         [Test, TestCaseSource(typeof(CreateNodeDataSource))]
         public void GetAllPossibleSessionsTest(Cinema cinema, List<CinemaHallSessions> expected)
         {
-            //try catch
-            List<CinemaHallSessions> actual = cinema.AllPossibleSessions;
-            CollectionAssert.AreEqual(expected, actual);
+            try
+            {
+                List<CinemaHallSessions> actual = cinema.AllPossibleSessions;                
+                CollectionAssert.AreEqual(expected, actual);
+                
+            }
+            catch(ArgumentOutOfRangeException)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                {
+
+                    cinema.CinemaHallException();
+                    cinema.NodeException();
+
+                });
+                
+            }
         }
 
         [Test, TestCaseSource(typeof(RelevantSessionsWithOptimalTimeDataSource))]
@@ -37,55 +52,6 @@ namespace CinemaHallTests
         {
             List<CinemaHallSessions> actual = cinema.RelevantSessionsWithAllFilms;
             CollectionAssert.AreEqual(expected, actual);
-        }
-
-        public class CreateNodeDataSource : IEnumerable
-        {
-            CinemaMocks cinemaMocks = new CinemaMocks();
-            CinemaHallSessionsMocks sessionsMocks = new CinemaHallSessionsMocks();
-
-            public IEnumerator GetEnumerator()
-            {
-                Cinema cinema = cinemaMocks.First();
-                List<CinemaHallSessions> sessions = sessionsMocks.AllSessionsTest();
-                yield return new object[] { cinema, sessions };
-            }
-        }
-
-        public class RelevantSessionsWithOptimalTimeDataSource : IEnumerable
-        {
-            CinemaMocks cinemaMocks = new CinemaMocks();
-            CinemaHallSessionsMocks sessionsMocks = new CinemaHallSessionsMocks();
-
-            public IEnumerator GetEnumerator()
-            {
-                Cinema cinema1 = cinemaMocks.First();
-                List<CinemaHallSessions> sessions1 = sessionsMocks.RelevantSessionsWithTimeTest1();
-
-                Cinema cinema2 = cinemaMocks.Second();
-                List<CinemaHallSessions> sessions2 = sessionsMocks.RelevantSessionsWithTimeTest2();
-
-                yield return new object[] { cinema1, sessions1 };
-                yield return new object[] { cinema2, sessions2 };
-            }
-        }
-
-        public class RelevantSessionsWithAllFilmsDataSource : IEnumerable
-        {
-            CinemaMocks cinemaMocks = new CinemaMocks();
-            CinemaHallSessionsMocks sessionsMocks = new CinemaHallSessionsMocks();
-
-            public IEnumerator GetEnumerator()
-            {
-                Cinema cinema1 = cinemaMocks.First();
-                List<CinemaHallSessions> sessions1 = sessionsMocks.RelevantSessionsWithAllFilmsTest1();
-
-                Cinema cinema2 = cinemaMocks.Second();
-                List<CinemaHallSessions> sessions2 = sessionsMocks.RelevantSessionsWithAllFilmsTest2();
-
-                yield return new object[] { cinema1, sessions1 };
-                yield return new object[] { cinema2, sessions2 };
-            }
-        }
+        } 
     }
 }

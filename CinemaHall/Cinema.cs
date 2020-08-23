@@ -143,7 +143,7 @@ namespace CinemaHall
 
             if (_allPossibleSessions.Count < _hallNumber)
             {
-                Exception();
+                CinemaHallException();
             }
 
             _allPossibleSessions.Sort();
@@ -227,9 +227,7 @@ namespace CinemaHall
             }
 
             return _relevantSessionsWithAllFilms;
-        }               
-
-        
+        }
 
         private List<CinemaHallSessions> Copy(List<CinemaHallSessions> cinemaHallSessions)
         {
@@ -244,22 +242,22 @@ namespace CinemaHall
             return newSessions;
         }
 
-        private void Exception()
+        public ArgumentOutOfRangeException CinemaHallException()
         {
-            throw new Exception
+            throw new ArgumentOutOfRangeException
                     ($"Количество уникальных расписаний для этого списка фильмов ({_allPossibleSessions.Count}) меньше, чем количество залов ({_hallNumber}). " +
                     $"Увеличьте количество фильмов или уменьшите количество залов.");
         }
 
-        private void IncorrectValueException()
+        public Exception IncorrectValueException()
         {
             throw new Exception
                     ($"Значение должно быть больше нуля");
         }
 
-        private void NodeException()
+        public ArgumentOutOfRangeException NodeException()
         {
-            throw new Exception
+            throw new ArgumentOutOfRangeException
                     ($"При заданных параметрах невозможно создать ни один сеанс. Измените продолжительность работы кинотеатра или продолжительность фильмов.");
         }
     }

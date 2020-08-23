@@ -40,5 +40,35 @@ namespace CinemaHallTests.Mocks
             return new Cinema(hallNumber, cinemaWorkTime, films);
         }
 
+        public Cinema Third()
+        {
+            Cinema cinema = new Cinema();
+            cinema.WorkTime = 600;
+            cinema.HallNumber = 10;
+            List<Film> films = new List<Film>();
+
+            films.Add(new Film(3, "Титаник", 590));
+            films.Add(new Film(6, "Война и мир 3", 575));
+            
+            cinema.Films = films;
+
+            return cinema;
+        }
+
+        public Cinema Forth()
+        {
+            Cinema cinema = new Cinema();
+            cinema.WorkTime = 600;
+            cinema.HallNumber = 1;
+            List<Film> films = new List<Film>();
+
+            films.Add(new Film(3, "Титаник", 690));
+            films.Add(new Film(6, "Война и мир 3", 675));
+
+            cinema.Films = films;
+
+            return cinema;
+        }
+
     }
 }
